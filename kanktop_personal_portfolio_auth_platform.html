@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KANKTOP — Portfolio & Management Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        darkCard: '#121824',
+                        darkBorder: '#1e293b',
+                        brandPrimary: '#6366f1',
+                        brandSecondary: '#a855f7'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(18, 24, 36, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen flex flex-col selection:bg-brandPrimary selection:text-white">
+
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-darkBorder px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('portfolio')">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brandPrimary to-brandSecondary flex items-center justify-center shadow-lg shadow-brandPrimary/30">
+                <i class="fa-solid fa-code text-white text-sm"></i>
+            </div>
+            <span class="text-lg font-bold tracking-tight text-white">KANKTOP<span class="text-brandPrimary">.</span></span>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-400">
+            <button onclick="navigateTo('portfolio')" class="hover:text-white transition">Home</button>
+            <a href="#about" onclick="navigateTo('portfolio')" class="hover:text-white transition">About</a>
+            <a href="#projects" onclick="navigateTo('portfolio')" class="hover:text-white transition">Projects</a>
+            <a href="#contact" onclick="navigateTo('portfolio')" class="hover:text-white transition">Contact</a>
+        </nav>
+
+        <div id="auth-nav-actions" class="flex items-center gap-3">
+            <!-- Dynamically populated by auth state -->
+        </div>
+    </header>
+
+    <main class="flex-grow flex flex-col">
+
+        <!-- PORTFOLIO VIEW -->
+        <div id="view-portfolio" class="view-section flex-grow flex flex-col">
+            <section class="px-6 py-20 lg:py-32 max-w-5xl mx-auto w-full flex flex-col items-center text-center">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brandPrimary/10 border border-brandPrimary/20 text-brandPrimary text-xs font-medium mb-6">
+                    <span class="w-2 h-2 rounded-full bg-brandPrimary animate-pulse"></span> Available for new projects
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6 max-w-3xl leading-tight">
+                    Crafting minimalist digital experiences & <span class="bg-gradient-to-r from-brandPrimary to-brandSecondary bg-clip-text text-transparent">robust systems</span>.
+                </h1>
+
+                <p class="text-slate-400 text-base sm:text-lg max-w-xl mb-10">
+                    Hi, I'm KANKTOP. A full-stack engineer focused on clean code, aesthetic precision, and reliable architecture.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-sm">
+                    <button onclick="navigateTo('login')" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brandPrimary to-brandSecondary text-white font-medium text-sm shadow-lg shadow-brandPrimary/20 hover:opacity-95 transition">
+                        Sign In Portal <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                    <a href="#contact" class="px-6 py-3.5 rounded-xl glass-panel text-sm font-medium hover:bg-slate-800 transition">
+                        Quick Email
+                    </a>
+                </div>
+
+                <!-- Quick Demo Login Helper Card -->
+                <div class="mt-12 p-4 rounded-2xl glass-panel text-xs text-slate-400 max-w-md w-full flex flex-col sm:flex-row items-center justify-between gap-3 border border-brandPrimary/20">
+                    <div class="text-left">
+                        <p class="font-semibold text-slate-200">Instant Demo Access</p>
+                        <p class="text-slate-400">Test Admin & User portals instantly</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="fillDemo('admin')" class="px-3 py-1.5 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 font-medium transition">Admin</button>
+                        <button onclick="fillDemo('user')" class="px-3 py-1.5 rounded-lg bg-brandPrimary/20 text-brandPrimary hover:bg-brandPrimary/30 font-medium transition">User</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="px-6 py-16 border-t border-darkBorder">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-8 text-center">Featured Projects</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-panel p-6 rounded-2xl border border-darkBorder hover:border-brandPrimary/40 transition">
+                            <div class="w-10 h-10 rounded-xl bg-brandPrimary/10 text-brandPrimary flex items-center justify-center mb-4">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2">KANKTOP Core Platform</h3>
+                            <p class="text-slate-400 text-sm mb-4">An enterprise workspace management suite featuring role-based auth and live messaging.</p>
+                            <span class="text-xs text-brandPrimary font-medium">Full-Stack Application</span>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl border border-darkBorder hover:border-brandSecondary/40 transition">
+                            <div class="w-10 h-10 rounded-xl bg-brandSecondary/10 text-brandSecondary flex items-center justify-center mb-4">
+                                <i class="fa-solid fa-chart-pie"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2">Nexus Analytics Engine</h3>
+                            <p class="text-slate-400 text-sm mb-4">Real-time data visualization dashboard processing telemetry streams.</p>
+                            <span class="text-xs text-brandSecondary font-medium">Data Visualization</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="px-6 py-16 border-t border-darkBorder bg-darkCard/30">
+                <div class="max-w-xl mx-auto text-center space-y-6">
+                    <h2 class="text-2xl font-bold">Get In Touch</h2>
+                    <p class="text-slate-400 text-sm">Send a direct message or inquiry. It will be dispatched directly to the Administrator control panel.</p>
+                    <form onsubmit="handlePublicContact(event)" class="glass-panel p-6 rounded-2xl border border-darkBorder space-y-4 text-left">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Your Name</label>
+                            <input type="text" id="public-contact-name" required class="w-full px-4 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-sm text-slate-100" placeholder="Jane Doe">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Email Address</label>
+                            <input type="email" id="public-contact-email" required class="w-full px-4 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-sm text-slate-100" placeholder="jane@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Subject</label>
+                            <input type="text" id="public-contact-subject" required class="w-full px-4 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-sm text-slate-100" placeholder="Project Consultation">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Message</label>
+                            <textarea id="public-contact-message" rows="3" required class="w-full px-4 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-sm text-slate-100" placeholder="Hello KANKTOP, I would like to discuss..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brandPrimary to-brandSecondary text-white font-medium text-sm shadow-md shadow-brandPrimary/20 hover:opacity-95 transition">
+                            Send Email Inquiry
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <!-- LOGIN VIEW -->
+        <div id="view-login" class="view-section flex-grow flex items-center justify-center px-4 py-12 hidden">
+            <div class="max-w-md w-full glass-panel p-8 rounded-2xl shadow-xl border border-darkBorder">
+                <div class="text-center mb-6">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brandPrimary to-brandSecondary mx-auto flex items-center justify-center shadow-lg shadow-brandPrimary/30 mb-3">
+                        <i class="fa-solid fa-lock text-white text-lg"></i>
+                    </div>
+                    <h2 class="text-xl font-bold">Welcome Back</h2>
+                    <p class="text-slate-400 text-xs mt-1">Sign in to your KANKTOP portal account</p>
+                </div>
+
+                <form onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Email Address</label>
+                        <input type="email" id="login-email" required class="w-full px-4 py-3 bg-darkBg border border-darkBorder rounded-xl focus:outline-none focus:border-brandPrimary text-sm text-slate-100" placeholder="admin@kanktop.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Password</label>
+                        <input type="password" id="login-password" required class="w-full px-4 py-3 bg-darkBg border border-darkBorder rounded-xl focus:outline-none focus:border-brandPrimary text-sm text-slate-100" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brandPrimary to-brandSecondary text-white font-medium text-sm shadow-lg shadow-brandPrimary/20 hover:opacity-95 transition mt-2">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center text-xs text-slate-400">
+                    Don't have an account? <button onclick="navigateTo('signup')" class="text-brandPrimary font-medium hover:underline">Create account</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIGNUP VIEW -->
+        <div id="view-signup" class="view-section flex-grow flex items-center justify-center px-4 py-12 hidden">
+            <div class="max-w-md w-full glass-panel p-8 rounded-2xl shadow-xl border border-darkBorder">
+                <div class="text-center mb-6">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brandPrimary to-brandSecondary mx-auto flex items-center justify-center shadow-lg shadow-brandPrimary/30 mb-3">
+                        <i class="fa-solid fa-user-plus text-white text-lg"></i>
+                    </div>
+                    <h2 class="text-xl font-bold">Create Account</h2>
+                    <p class="text-slate-400 text-xs mt-1">Join the KANKTOP portal</p>
+                </div>
+
+                <form onsubmit="handleSignup(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Full Name</label>
+                        <input type="text" id="signup-name" required class="w-full px-4 py-3 bg-darkBg border border-darkBorder rounded-xl focus:outline-none focus:border-brandPrimary text-sm text-slate-100" placeholder="Jane Doe">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Email Address</label>
+                        <input type="email" id="signup-email" required class="w-full px-4 py-3 bg-darkBg border border-darkBorder rounded-xl focus:outline-none focus:border-brandPrimary text-sm text-slate-100" placeholder="jane@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Password</label>
+                        <input type="password" id="signup-password" required class="w-full px-4 py-3 bg-darkBg border border-darkBorder rounded-xl focus:outline-none focus:border-brandPrimary text-sm text-slate-100" placeholder="••••••••">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Account Role</label>
+                        <select id="signup-role" class="w-full px-4 py-3 bg-darkBg border border-darkBorder rounded-xl focus:outline-none focus:border-brandPrimary text-sm text-slate-100">
+                            <option value="user">Standard User</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brandPrimary to-brandSecondary text-white font-medium text-sm shadow-lg shadow-brandPrimary/20 hover:opacity-95 transition mt-2">
+                        Complete Registration
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center text-xs text-slate-400">
+                    Already have an account? <button onclick="navigateTo('login')" class="text-brandPrimary font-medium hover:underline">Sign In</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- USER DASHBOARD VIEW -->
+        <div id="view-user-dashboard" class="view-section flex-grow flex flex-col hidden">
+            <div class="flex flex-col lg:flex-row flex-grow">
+                <aside class="w-full lg:w-64 bg-darkCard/50 border-r border-darkBorder p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-darkBorder">
+                            <div class="w-9 h-9 rounded-full bg-brandPrimary/20 text-brandPrimary flex items-center justify-center font-bold text-sm user-avatar-initial">U</div>
+                            <div>
+                                <h4 class="font-bold text-xs user-display-name">User Account</h4>
+                                <span class="text-[10px] text-brandPrimary uppercase font-semibold">Standard Client</span>
+                            </div>
+                        </div>
+                        <nav class="space-y-1 text-sm font-medium">
+                            <button onclick="switchUserTab('overview')" class="user-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-brandPrimary text-white transition text-xs">
+                                <i class="fa-solid fa-house w-4"></i> Overview
+                            </button>
+                            <button onclick="switchUserTab('email')" class="user-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition text-xs">
+                                <i class="fa-solid fa-paper-plane w-4"></i> Email Admin
+                            </button>
+                            <button onclick="switchUserTab('settings')" class="user-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition text-xs">
+                                <i class="fa-solid fa-gear w-4"></i> Profile Settings
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="pt-4 border-t border-darkBorder">
+                        <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-400 hover:bg-rose-500/10 transition text-xs font-medium">
+                            <i class="fa-solid fa-arrow-right-from-bracket w-4"></i> Sign Out
+                        </button>
+                    </div>
+                </aside>
+
+                <div class="flex-grow p-6 lg:p-10">
+                    <!-- User Tab 1: Overview -->
+                    <div id="user-tab-overview" class="user-tab-content space-y-6">
+                        <h1 class="text-2xl font-bold">Welcome back, <span class="user-display-name">User</span></h1>
+                        <p class="text-slate-400 text-sm">Your client workspace and active project communications.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="p-6 rounded-2xl glass-panel border border-darkBorder">
+                                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Active Services</p>
+                                <h3 class="text-3xl font-bold text-brandPrimary">2</h3>
+                                <p class="text-xs text-emerald-400 mt-2">All nodes operational</p>
+                            </div>
+                            <div class="p-6 rounded-2xl glass-panel border border-darkBorder">
+                                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Sent Inquiries / Emails</p>
+                                <h3 id="user-sent-count" class="text-3xl font-bold text-slate-200">0</h3>
+                                <p class="text-xs text-slate-400 mt-2">Messages sent to Administrator</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Tab 2: Contact Admin via Email -->
+                    <div id="user-tab-email" class="user-tab-content space-y-6 hidden">
+                        <div>
+                            <h1 class="text-2xl font-bold">Contact Administrator via Email</h1>
+                            <p class="text-slate-400 text-sm mt-1">Send a direct message or inquiry to the admin panel.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <form onsubmit="handleUserEmailSubmit(event)" class="glass-panel p-6 rounded-2xl border border-darkBorder space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Subject</label>
+                                    <input type="text" id="user-email-subject" required class="w-full px-4 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-sm text-slate-100" placeholder="e.g. Feature Request or Technical Support">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Message Content</label>
+                                    <textarea id="user-email-body" rows="4" required class="w-full px-4 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-sm text-slate-100" placeholder="Describe your inquiry in detail..."></textarea>
+                                </div>
+                                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brandPrimary to-brandSecondary text-white font-medium text-xs shadow-md shadow-brandPrimary/20 hover:opacity-95 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> Dispatch Message to Admin
+                                </button>
+                            </form>
+
+                            <div class="space-y-4">
+                                <h3 class="text-sm font-bold uppercase text-slate-400 tracking-wider">Your Message History</h3>
+                                <div id="user-message-history" class="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Tab 3: Settings -->
+                    <div id="user-tab-settings" class="user-tab-content space-y-6 hidden">
+                        <h1 class="text-2xl font-bold">Profile Settings</h1>
+                        <p class="text-slate-400 text-sm">Update your account credentials and preferences.</p>
+                        <div class="glass-panel p-6 rounded-2xl border border-darkBorder max-w-md space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Display Name</label>
+                                <input type="text" id="settings-name" class="w-full px-4 py-2.5 bg-darkBg border border-darkBorder rounded-xl text-sm text-slate-100" value="User Account">
+                            </div>
+                            <button onclick="showToast('Profile updated successfully', 'success')" class="px-4 py-2 rounded-xl bg-brandPrimary text-white text-xs font-medium">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN DASHBOARD VIEW -->
+        <div id="view-admin-dashboard" class="view-section flex-grow flex flex-col hidden">
+            <div class="flex flex-col lg:flex-row flex-grow">
+                <aside class="w-full lg:w-64 bg-darkCard/50 border-r border-darkBorder p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-darkBorder">
+                            <div class="w-9 h-9 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm user-avatar-initial">A</div>
+                            <div>
+                                <h4 class="font-bold text-xs user-display-name">Administrator</h4>
+                                <span class="text-[10px] text-purple-400 uppercase font-semibold">Superadmin</span>
+                            </div>
+                        </div>
+                        <nav class="space-y-1 text-sm font-medium">
+                            <button onclick="switchAdminTab('overview')" class="admin-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-purple-600 text-white transition text-xs">
+                                <i class="fa-solid fa-gauge w-4"></i> System Status
+                            </button>
+                            <button onclick="switchAdminTab('notifications')" class="admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition text-xs">
+                                <span class="flex items-center gap-3"><i class="fa-solid fa-bell w-4"></i> Notifications</span>
+                                <span id="admin-unread-badge" class="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-bold hidden">0</span>
+                            </button>
+                            <button onclick="switchAdminTab('users')" class="admin-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition text-xs">
+                                <i class="fa-solid fa-users w-4"></i> User Directory
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="pt-4 border-t border-darkBorder">
+                        <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-400 hover:bg-rose-500/10 transition text-xs font-medium">
+                            <i class="fa-solid fa-arrow-right-from-bracket w-4"></i> Sign Out
+                        </button>
+                    </div>
+                </aside>
+
+                <div class="flex-grow p-6 lg:p-10">
+                    <!-- Admin Tab 1: Overview -->
+                    <div id="admin-tab-overview" class="admin-tab-content space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-2xl font-bold">Admin Control Center</h1>
+                                <p class="text-slate-400 text-sm">Platform telemetry and user inquiries monitoring.</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">All Systems Normal</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div class="p-6 rounded-2xl glass-panel border border-darkBorder">
+                                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Registered Accounts</p>
+                                <h3 id="stat-total-users" class="text-3xl font-bold text-white">2</h3>
+                                <p class="text-xs text-emerald-400 mt-2">Active database records</p>
+                            </div>
+                            <div class="p-6 rounded-2xl glass-panel border border-darkBorder">
+                                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Total Inquiries / Emails</p>
+                                <h3 id="stat-total-inquiries" class="text-3xl font-bold text-purple-400">0</h3>
+                                <p class="text-xs text-slate-400 mt-2">User dispatches stored</p>
+                            </div>
+                            <div class="p-6 rounded-2xl glass-panel border border-darkBorder">
+                                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Uptime</p>
+                                <h3 class="text-3xl font-bold text-emerald-400">99.99%</h3>
+                                <p class="text-xs text-slate-400 mt-2">Zero incidents</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Tab 2: Notifications & Inquiries -->
+                    <div id="admin-tab-notifications" class="admin-tab-content space-y-6 hidden">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-2xl font-bold">User Inquiries & Notifications</h1>
+                                <p class="text-slate-400 text-sm">Email dispatches and messages sent by standard users.</p>
+                            </div>
+                            <button onclick="clearAllNotifications()" class="px-3 py-1.5 rounded-xl border border-rose-500/30 text-rose-400 text-xs hover:bg-rose-500/10 transition">
+                                Clear All
+                            </button>
+                        </div>
+
+                        <div id="admin-notifications-list" class="space-y-4">
+                            <!-- Rendered dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Admin Tab 3: Users Directory -->
+                    <div id="admin-tab-users" class="admin-tab-content space-y-6 hidden">
+                        <h1 class="text-2xl font-bold">User Directory</h1>
+                        <p class="text-slate-400 text-sm">Accounts registered in LocalStorage.</p>
+                        <div class="glass-panel rounded-2xl border border-darkBorder p-6 overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead>
+                                    <tr class="border-b border-darkBorder text-slate-400 text-xs uppercase">
+                                        <th class="pb-3 font-semibold">Name</th>
+                                        <th class="pb-3 font-semibold">Email</th>
+                                        <th class="pb-3 font-semibold">Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-users-table-body" class="divide-y divide-darkBorder/50 text-slate-300">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-darkBorder py-6 px-6 text-center text-xs text-slate-500 glass-panel">
+        &copy; 2026 KANKTOP Portfolio & Portal. Built with minimalist precision.
+    </footer>
+
+    <script>
+        function initStorage() {
+            if (!localStorage.getItem('kanktop_users')) {
+                const defaultUsers = [
+                    { name: 'System Administrator', email: 'admin@kanktop.com', password: 'admin123', role: 'admin' },
+                    { name: 'Standard User', email: 'user@kanktop.com', password: 'user123', role: 'user' }
+                ];
+                localStorage.setItem('kanktop_users', JSON.stringify(defaultUsers));
+            }
+
+            if (!localStorage.getItem('kanktop_notifications')) {
+                const defaultNotifications = [
+                    {
+                        id: 1,
+                        senderName: 'Standard User',
+                        senderEmail: 'user@kanktop.com',
+                        subject: 'Initial System Consultation',
+                        message: 'Hello Administrator, I would like to inquire about customizing my client dashboard.',
+                        timestamp: new Date().toLocaleString(),
+                        status: 'unread'
+                    }
+                ];
+                localStorage.setItem('kanktop_notifications', JSON.stringify(defaultNotifications));
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let icon = 'fa-circle-check text-brandPrimary';
+            if (type === 'error') icon = 'fa-circle-exclamation text-rose-400';
+
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border glass-panel shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 bg-slate-900 border-darkBorder text-slate-100`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span class="text-xs font-medium">${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function navigateTo(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            const currentUser = JSON.parse(localStorage.getItem('kanktop_current_user'));
+
+            if ((viewName === 'user-dashboard' || viewName === 'admin-dashboard') && !currentUser) {
+                showToast('Please sign in to access the portal', 'error');
+                navigateTo('login');
+                return;
+            }
+
+            if (viewName === 'user-dashboard' && currentUser && currentUser.role === 'admin') {
+                viewName = 'admin-dashboard';
+            }
+
+            const target = document.getElementById(`view-${viewName}`);
+            if (target) {
+                target.classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }
+
+            updateAuthNav();
+
+            if (viewName === 'admin-dashboard') {
+                renderAdminDashboard();
+            } else if (viewName === 'user-dashboard') {
+                renderUserDashboard();
+            }
+        }
+
+        function updateAuthNav() {
+            const currentUser = JSON.parse(localStorage.getItem('kanktop_current_user'));
+            const navActions = document.getElementById('auth-nav-actions');
+
+            if (currentUser) {
+                const dash = currentUser.role === 'admin' ? 'admin-dashboard' : 'user-dashboard';
+                navActions.innerHTML = `
+                    <button onclick="navigateTo('${dash}')" class="px-4 py-2 rounded-xl bg-brandPrimary/20 text-brandPrimary text-xs font-medium hover:bg-brandPrimary/30 transition">
+                        Dashboard
+                    </button>
+                    <button onclick="handleLogout()" class="px-3 py-2 rounded-xl text-slate-400 hover:text-rose-400 text-xs transition" title="Sign Out">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                `;
+                document.querySelectorAll('.user-display-name').forEach(el => el.textContent = currentUser.name);
+                document.querySelectorAll('.user-avatar-initial').forEach(el => el.textContent = currentUser.name.charAt(0).toUpperCase());
+            } else {
+                navActions.innerHTML = `
+                    <button onclick="navigateTo('login')" class="px-4 py-2 rounded-xl text-xs font-medium hover:text-white transition">Sign In</button>
+                    <button onclick="navigateTo('signup')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brandPrimary to-brandSecondary text-white text-xs font-medium shadow-md shadow-brandPrimary/20 hover:opacity-95 transition">Get Started</button>
+                `;
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const users = JSON.parse(localStorage.getItem('kanktop_users')) || [];
+            
+            const found = users.find(u => u.email === email && u.password === password);
+            if (found) {
+                localStorage.setItem('kanktop_current_user', JSON.stringify(found));
+                showToast(`Welcome back, ${found.name}!`, 'success');
+                navigateTo(found.role === 'admin' ? 'admin-dashboard' : 'user-dashboard');
+            } else {
+                showToast('Invalid credentials. Try demo accounts.', 'error');
+            }
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const role = document.getElementById('signup-role').value;
+
+            const users = JSON.parse(localStorage.getItem('kanktop_users')) || [];
+            if (users.some(u => u.email === email)) {
+                showToast('Email already registered.', 'error');
+                return;
+            }
+
+            const newUser = { name, email, password, role };
+            users.push(newUser);
+            localStorage.setItem('kanktop_users', JSON.stringify(users));
+            localStorage.setItem('kanktop_current_user', JSON.stringify(newUser));
+
+            showToast('Account created successfully!', 'success');
+            navigateTo(role === 'admin' ? 'admin-dashboard' : 'user-dashboard');
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('kanktop_current_user');
+            showToast('Signed out successfully.', 'success');
+            navigateTo('portfolio');
+        }
+
+        function fillDemo(role) {
+            if (role === 'admin') {
+                document.getElementById('login-email').value = 'admin@kanktop.com';
+                document.getElementById('login-password').value = 'admin123';
+                showToast('Demo Admin credentials loaded', 'success');
+            } else {
+                document.getElementById('login-email').value = 'user@kanktop.com';
+                document.getElementById('login-password').value = 'user123';
+                showToast('Demo User credentials loaded', 'success');
+            }
+            navigateTo('login');
+        }
+
+        function handlePublicContact(e) {
+            e.preventDefault();
+            const name = document.getElementById('public-contact-name').value.trim();
+            const email = document.getElementById('public-contact-email').value.trim();
+            const subject = document.getElementById('public-contact-subject').value.trim();
+            const message = document.getElementById('public-contact-message').value.trim();
+
+            dispatchNotification(name, email, subject, message);
+            showToast('Inquiry sent! The Administrator has been notified.', 'success');
+            e.target.reset();
+        }
+
+        function handleUserEmailSubmit(e) {
+            e.preventDefault();
+            const currentUser = JSON.parse(localStorage.getItem('kanktop_current_user'));
+            const subject = document.getElementById('user-email-subject').value.trim();
+            const message = document.getElementById('user-email-body').value.trim();
+
+            if (!currentUser) return;
+
+            dispatchNotification(currentUser.name, currentUser.email, subject, message);
+            showToast('Email message dispatched to Administrator!', 'success');
+            e.target.reset();
+            renderUserDashboard();
+        }
+
+        function dispatchNotification(senderName, senderEmail, subject, message) {
+            const notifications = JSON.parse(localStorage.getItem('kanktop_notifications')) || [];
+            const newNotification = {
+                id: Date.now(),
+                senderName,
+                senderEmail,
+                subject,
+                message,
+                timestamp: new Date().toLocaleString(),
+                status: 'unread'
+            };
+            notifications.unshift(newNotification);
+            localStorage.setItem('kanktop_notifications', JSON.stringify(notifications));
+        }
+
+        function switchUserTab(tabId) {
+            document.querySelectorAll('.user-tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`user-tab-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.user-tab-btn').forEach(btn => btn.className = "user-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition text-xs");
+            event.currentTarget.className = "user-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-brandPrimary text-white transition text-xs";
+        }
+
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`admin-tab-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.className = "admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition text-xs");
+            event.currentTarget.className = "admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-purple-600 text-white transition text-xs";
+        }
+
+        function renderUserDashboard() {
+            const currentUser = JSON.parse(localStorage.getItem('kanktop_current_user'));
+            if (!currentUser) return;
+
+            const notifications = JSON.parse(localStorage.getItem('kanktop_notifications')) || [];
+            const userMessages = notifications.filter(n => n.senderEmail === currentUser.email);
+
+            document.getElementById('user-sent-count').textContent = userMessages.length;
+
+            const historyContainer = document.getElementById('user-message-history');
+            if (userMessages.length === 0) {
+                historyContainer.innerHTML = `<p class="text-xs text-slate-500 italic">No messages sent yet.</p>`;
+            } else {
+                historyContainer.innerHTML = userMessages.map(m => `
+                    <div class="glass-panel p-4 rounded-xl border border-darkBorder space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-200">${m.subject}</span>
+                            <span class="text-[10px] text-slate-500">${m.timestamp}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">${m.message}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderAdminDashboard() {
+            const users = JSON.parse(localStorage.getItem('kanktop_users')) || [];
+            const notifications = JSON.parse(localStorage.getItem('kanktop_notifications')) || [];
+
+            document.getElementById('stat-total-users').textContent = users.length;
+            document.getElementById('stat-total-inquiries').textContent = notifications.length;
+
+            const unreadCount = notifications.filter(n => n.status === 'unread').length;
+            const badge = document.getElementById('admin-unread-badge');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            // User directory table
+            const tbody = document.getElementById('admin-users-table-body');
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td class="py-3 font-medium">${u.name}</td>
+                    <td class="py-3 text-slate-400">${u.email}</td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded-full ${u.role === 'admin' ? 'bg-purple-500/10 text-purple-400' : 'bg-brandPrimary/10 text-brandPrimary'} text-[10px] font-semibold uppercase">${u.role}</span></td>
+                </tr>
+            `).join('');
+
+            // Notifications list
+            const notifList = document.getElementById('admin-notifications-list');
+            if (notifications.length === 0) {
+                notifList.innerHTML = `<div class="glass-panel p-8 text-center text-xs text-slate-500 rounded-2xl">No inquiries or notifications recorded.</div>`;
+            } else {
+                notifList.innerHTML = notifications.map(n => `
+                    <div class="glass-panel p-5 rounded-2xl border ${n.status === 'unread' ? 'border-brandPrimary/50 bg-brandPrimary/5' : 'border-darkBorder'} transition space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-sm text-slate-100">${n.subject}</span>
+                                ${n.status === 'unread' ? '<span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 text-[10px] font-bold">UNREAD</span>' : ''}
+                            </div>
+                            <span class="text-xs text-slate-500">${n.timestamp}</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed bg-darkBg/50 p-3 rounded-xl border border-darkBorder/50">${n.message}</p>
+                        <div class="flex items-center justify-between pt-1">
+                            <div class="text-xs text-slate-400">
+                                From: <strong class="text-slate-200">${n.senderName}</strong> (<a href="mailto:${n.senderEmail}" class="text-brandPrimary hover:underline">${n.senderEmail}</a>)
+                            </div>
+                            <div class="flex gap-2">
+                                ${n.status === 'unread' ? `<button onclick="markAsRead(${n.id})" class="px-3 py-1 rounded-lg bg-brandPrimary/20 text-brandPrimary hover:bg-brandPrimary/30 text-xs font-medium transition">Mark as Read</button>` : ''}
+                                <button onclick="deleteNotification(${n.id})" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 text-xs transition"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function markAsRead(id) {
+            const notifications = JSON.parse(localStorage.getItem('kanktop_notifications')) || [];
+            const index = notifications.findIndex(n => n.id === id);
+            if (index !== -1) {
+                notifications[index].status = 'read';
+                localStorage.setItem('kanktop_notifications', JSON.stringify(notifications));
+                renderAdminDashboard();
+                showToast('Marked as read', 'success');
+            }
+        }
+
+        function deleteNotification(id) {
+            let notifications = JSON.parse(localStorage.getItem('kanktop_notifications')) || [];
+            notifications = notifications.filter(n => n.id !== id);
+            localStorage.setItem('kanktop_notifications', JSON.stringify(notifications));
+            renderAdminDashboard();
+            showToast('Notification removed', 'success');
+        }
+
+        function clearAllNotifications() {
+            localStorage.setItem('kanktop_notifications', JSON.stringify([]));
+            renderAdminDashboard();
+            showToast('All notifications cleared', 'success');
+        }
+
+        window.onload = function() {
+            initStorage();
+            updateAuthNav();
+        };
+    </script>
+</body>
+</html>
